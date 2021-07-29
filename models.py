@@ -1,91 +1,55 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.shortcuts import render, redirect, reverse
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-from django.http import HttpResponse, HttpResponseRedirect
-from Login.models import Login, Owner, Customer
-from Coupon.models import CouponHandling, Get,Coupon
+from datetime import date
+from Login.models import Login,Owner, Customer
 
+class Coupon(models.Model):
+    coup_id      = models.AutoField(primary_key=True)
+    coup_name    = models.CharField(max_length=100)
+    start_date   = models.DateField(default=date.today) 
+    end_date     = models.DateField(default=date.today) 
 
-class MyAccountManager(BaseUserManager):
-	def create_user(self, email, username, password=None):
-		if not email:
-			raise ValueError('Users must have an email address')
-		if not username:
-			raise ValueError('Users must have a username')
+    def __str__(self):
+        return self.coup_name
 
-		user = self.model(
-			email=self.normalize_email(email),
-			username=username,
-		)
+class Get(models.Model):
+    gid          = models.AutoField(primary_key=True)
+    coup_id      = models.ForeignKey(Coupon,on_delete=models.CASCADE)
+    username          = models.CharField(max_length=100,blank=True,null=True)
+    coupon_unique_code = models.CharField(max_length=100,blank=True,null=True)
+    status       = models.BooleanField(default=False)
 
-		user.set_password(password)
-		user.save(using=self._db)
-		return user
+    def __str__(self):
+        return str(self.gid)+":"+self.username
 
-	def create_superuser(self, email, username, password):
-		user = self.create_user(
-			email=self.normalize_email(email),
-			password=password,
-			username=username,
-		)
-		user.is_owner = True
-		user.is_staff = True
-		user.is_superuser = True
-		user.save(using=self._db)
-		return user
+class CouponHandling(models.Model):
+    username    = models.CharField(primary_key=True,max_length=100)
+    timestamp_login     = models.DateTimeField(blank=True,null=True)
+    timestamp_logout    = models.DateTimeField(blank=True,null=True)
+    total_usage = models.TimeField(blank=True,null=True)
+    user    = models.CharField(max_length=100,blank=True,null=True)
 
+    def __str__(self):
+        return self.username
+        
+class Vehicle(models.Model):
+    vid          = models.AutoField(primary_key=True)
+    vtype        = models.CharField(max_length=100)
+    status       = models.BooleanField(default=True)
 
-class Account(AbstractBaseUser):
-	email 					= models.EmailField(verbose_name="email", max_length=60, unique=True)
-	username 				= models.CharField(max_length=30, unique=True)
-	date_joined				= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-	last_login				= models.DateTimeField(verbose_name='last login', auto_now=True)
-	is_owner				= models.BooleanField(default=False)
-	is_staff				= models.BooleanField(default=False)
-	is_superuser			= models.BooleanField(default=False)
+    def __str__(self):
+        return str(self.vid) + " : " + self.vtype
 
+class Location(models.Model):
+    locid        = models.AutoField(primary_key=True)
+    ltype        = models.CharField(max_length=100)
 
-	USERNAME_FIELD = 'email'
-	REQUIRED_FIELDS = ['username']
+    def __str__(self):
+        return str(self.locid) + " : " + self.ltype
 
-	objects = MyAccountManager()
+class View(models.Model):
+    viewid        = models.AutoField(primary_key=True)
+    locid         = models.ForeignKey(Location,on_delete=models.CASCADE)
+    cid           = models.ForeignKey(Customer,on_delete=models.CASCADE)
 
-	def __str__(self):
-		return self.email
-
-	# For checking permissions. to keep it simple all admin have ALL permissons
-	def has_perm(self, perm, obj=None):
-		return self.is_superuser
-
-	# Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)
-	def has_module_perms(self, app_label):
-		return True
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
-        print(instance)
-        if instance.is_owner:
-            L = Login(username=instance.username,isowner=True,iscustomer=False)
-            L.save()
-            O = Owner(L,oname=instance.username,oemail=instance.email)
-            O.save()
-        else:
-            L = Login(username=instance.username,isowner=False,iscustomer=True)
-            L.save()
-            O = Customer(L,cname=instance.username,cemail=instance.email)
-            O.save()
-            C = CouponHandling(username=instance.username)
-            C.save()
-            C = Coupon.objects.get(coup_id=1)
-            G = Get(coup_id=C,username=instance.username,status=True)
-            G.save()
-		
-
-
+    def __str__(self):
+        return str(self.viewid)

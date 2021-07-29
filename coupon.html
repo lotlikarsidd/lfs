@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial;
+}
+
+.coupon {
+  border: 5px dotted #bbb;
+  width: 400px;
+  border-radius: 15px;
+  margin: auto 10px;
+  max-width: 600px;
+}
+
+
+.container {
+  padding: 2px 16px;
+  background-color: #f1f1f1;
+}
+
+.promo {
+  background: #ccc;
+  padding: 3px;
+}
+
+.expire {
+  color: red;
+}
+</style>
+</head>
+<body>
+  {% if q == 1 and obj.status %}
+<div class="coupon">
+  <div class="container">
+    
+  </div>
+  
+  <h1>WELCOME COUPON</h3>
+  <div class="container" style="background-color:blue">
+    <h2><b>2% OFF ON BOOKING</b></h2> 
+    <p> Usage of WELCOME COUPON is that it povides 2% discounts for our new cuatomers on there first booking</p>
+  </div>
+  <div class="container">
+    <a href="/Coupon/coupon/redeem/{{ obj.username }}"><button>Use Promo Code: <span class="promo">BOH232</span></button></a>
+  </div>
+  
+</div>{% endif %}
+<br><br><br><br><br>
+{% if q == 2 and obj.status %}
+<div class="coupon">
+  <div class="container">
+    
+  </div>
+ <h1>SUPER COUPON</h3>
+  <div class="container" style="background-color:orange">
+    <h2><b>4% OFF ON BOOKING</b></h2> 
+    <p> Usage of WELCOME COUPON is that it povides 4% discounts for our new cuatomers on there first booking</p>
+  </div>
+  <div class="container">
+    <a href="/Coupon/coupon/redeem/{{ obj.username }}"><button>Use Promo Code: <span class="promo">BOH232</span></button></a>
+    <p class="expire">Expires: Jan 03, 2021</p>
+  </div>
+</div>
+{% endif %}
+{% if r  %}
+<h1>THe coupon has been redeemed</h1>
+{% endif %}
+<br><br><br><br><br>
+{% if not obj.status %}
+<h1>No coupons availaible</h1>
+{% endif %}
+<!-- <div class="coupon">
+  <div class="container">
+    
+  </div>
+  <h1>GANESH CHATURTHI DISCOUNT </h3>
+  <div class="container" style="background-color:red">
+    <h2><b>5% OFF ON BOOKING</b></h2> 
+    <p> Usage of WELCOME COUPON is that it povides 5% discounts for our new cuatomers on there first booking</p>
+  </div>
+  <div class="container">
+    <p>Use Promo Code: <span class="promo">BOH232</span></p>
+    <p class="expire">Expires: Jan 03, 2021</p>
+  </div>
+</div>
+<br><br><br><br><br>
+<div class="coupon">
+  <div class="container">
+    
+  </div>
+  <h1>DIWALI DISCOUNT</h3>
+  <div class="container" style="background-color:green">
+    <h2><b>6% OFF ON BOOKING</b></h2> 
+    <p> Usage of WELCOME COUPON is that it povides 6% discounts for our new cuatomers on there first booking</p>
+  </div>
+  <div class="container">
+    <p>Use Promo Code: <span class="promo">BOH232</span></p>
+    <p class="expire">Expires: Jan 03, 2021</p>
+  </div>
+</div>
+<br><br><br><br><br>
+<div class="coupon">
+  <div class="container">
+    
+  </div>
+  <h1>CHRISTMAST DISCOUNT</h3>
+  <div class="container" style="background-color:pink">
+    <h2><b>7% OFF ON BOOKING</b></h2> 
+    <p> Usage of WELCOME COUPON is that it povides 7% discounts for our new cuatomers on there first booking</p>
+  </div>
+  <div class="container">
+    <p>Use Promo Code: <span class="promo">BOH232</span></p>
+    <p class="expire">Expires: Jan 03, 2021</p>
+  </div>
+</div> -->
+</body>
+</html> 

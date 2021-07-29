@@ -1,20 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from account.models import Account
+from .models import Coupon, Get, Vehicle, Location, View, CouponHandling
 
-
-class AccountAdmin(UserAdmin):
-	list_display = ('pk', 'email','username','date_joined', 'last_login', 'is_owner')
-	search_fields = ('pk', 'email','username',)
-	readonly_fields=('pk', 'date_joined', 'last_login')
-
-	filter_horizontal = ()
-	list_filter = ()
-	fieldsets = ()
-
-
-admin.site.register(Account, AccountAdmin)
-
-
-
-
+admin.site.register(Coupon)
+admin.site.register(Get)
+admin.site.register(Vehicle)
+admin.site.register(Location)
+admin.site.register(View)
+admin.site.register(CouponHandling)

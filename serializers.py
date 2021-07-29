@@ -1,52 +1,39 @@
 from rest_framework import serializers
+from .models import Coupon, Get, Vehicle, Location, View
 
-from account.models import Account
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = ('coup_id',
+                  'coup_name',
+                  'start_date',
+                  'end_date',
+                  'count')
 
+class GetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Get
+        fields = ('gid',
+                  'coup_id',
+                  'cid',
+                  'coupon_unique_code')
 
-class RegistrationSerializer(serializers.ModelSerializer):
+class VehicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehicle
+        fields = ('vid',
+                  'vtype',
+                  'status')
 
-	password2 				= serializers.CharField(style={'input_type': 'password'}, write_only=True)
-
-	class Meta:
-		model = Account
-		fields = ['email', 'username', 'password', 'password2','is_owner']
-		extra_kwargs = {
-				'password': {'write_only': True},
-		}	
-
-
-	def	save(self):
-
-		account = Account(
-					email=self.custome_validated_data['email'],
-					username=self.validated_data['username'],
-					is_owner=self.validated_data['is_owner']
-				)
-		password = self.validated_data['password']
-		password2 = self.validated_data['password2']
-		if password != password2:
-			raise serializers.ValidationError({'password': 'Passwords must match.'})
-		account.set_password(password)
-		account.save()
-		return account
-
-
-class AccountPropertiesSerializer(serializers.ModelSerializer):
-
-	class Meta:
-		model = Account
-		fields = ['pk', 'email', 'username', ]
-
-
-
-
-class ChangePasswordSerializer(serializers.Serializer):
-
-	old_password 				= serializers.CharField(required=True)
-	new_password 				= serializers.CharField(required=True)
-	confirm_new_password 		= serializers.CharField(required=True)
-
-
-
-
-
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('locid',
+                  'ltype')
+    
+class ViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = View
+        fields = ('viewid',
+                  'locid',
+                  'cid')
